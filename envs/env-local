@@ -1,0 +1,19 @@
+##############################################################################################
+# NOTE: DO NOT INLUDE THIS FILE IN COMMIT, IT WILL COMPROMISE THE APPLICATION CONFIGURATION. #
+##############################################################################################
+PORT=8080
+ENVIRONMENT=LOCAL
+PROJECT=CLIO
+DESCRIPTION=School Template API
+
+
+##################################
+# POSTGRES CONNECTION PARAMETERS #
+##################################
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_LIST=clio
+
+
