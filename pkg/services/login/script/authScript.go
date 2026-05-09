@@ -5,8 +5,6 @@ import (
 
 	DBConnection "template_school/pkg/middleware/databaseConnection"
 	AUTHmodels "template_school/pkg/services/login/models"
-
-	"golang.org/x/crypto/bcrypt"
 )
 
 func AuthScriptLogin(req AUTHmodels.RequestBody) (string, error) {
@@ -16,18 +14,18 @@ func AuthScriptLogin(req AUTHmodels.RequestBody) (string, error) {
 		return "", fmt.Errorf("login and password are required")
 	}
 
-	// 2. Get DB
+	// 2. DB connection
 	db := DBConnection.GetDB()
 	if db == nil {
 		return "", fmt.Errorf("database not connected")
 	}
 
-	// 3. Get user from database (email OR username supported)
+	// 3. Get user (no bcrypt needed)
 	var user struct {
-		ID           int
-		Username     string
-		Email        string
-		PasswordHash string
+		ID       int
+		Username string
+		Email    string
+		Password string
 	}
 
 	err := db.Raw(
@@ -40,16 +38,10 @@ func AuthScriptLogin(req AUTHmodels.RequestBody) (string, error) {
 		return "", fmt.Errorf("user not found")
 	}
 
-	// 4. Check password
-	err = bcrypt.CompareHashAndPassword(
-		[]byte(user.PasswordHash),
-		[]byte(req.Password),
-	)
-
-	if err != nil {
+	// 4. SIMPLE PASSWORD CHECK (NO HASH)
+	if user.Password != req.Password {
 		return "", fmt.Errorf("wrong password")
 	}
 
-	// 5. Success response
 	return "success login", nil
 }
